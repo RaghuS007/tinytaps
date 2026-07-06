@@ -1,14 +1,29 @@
-const CACHE = 'tinytaps-v6';
-const ASSETS = ['/', '/index.html', '/play.html', '/tips.html', '/about.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE = 'tinytaps-v7';
+const ASSETS = [
+  '/',
+  '/play',
+  '/tips',
+  '/about',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png'
+];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(ASSETS))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      );
+    }).then(() => self.clients.claim())
   );
 });
 
@@ -17,10 +32,16 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return; // never cache the presence worker
 
-  // Handle Cloudflare Pages clean URLs (e.g. /play -> /play.html)
+  // Map incoming requests to the cached clean URLs
   let requestToMatch = e.request;
-  if (!url.pathname.endsWith('.html') && url.pathname !== '/' && !url.pathname.includes('.')) {
-    requestToMatch = url.pathname + '.html';
+  
+  if (url.pathname === '/index.html') {
+    requestToMatch = '/';
+  } else if (url.pathname.endsWith('.html')) {
+    const cleanPath = url.pathname.slice(0, -5);
+    if (['/play', '/tips', '/about'].includes(cleanPath)) {
+      requestToMatch = cleanPath;
+    }
   }
 
   e.respondWith(
@@ -33,11 +54,10 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => {
-        return caches.match('/play.html').then(fallback => {
+        return caches.match('/play').then(fallback => {
           return fallback || Response.error();
         });
       });
     })
   );
 });
-
