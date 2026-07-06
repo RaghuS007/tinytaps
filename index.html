@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08111f">
+<title>TinyTaps — A Safe Play World for Babies &amp; Toddlers</title>
+<meta name="description" content="7 free fullscreen play modes for babies and toddlers (6–36 months). Tap, pop, paint, peekaboo. No ads, no accounts, no tracking. Works offline.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:title" content="TinyTaps — a play world for tiny hands">
+<meta property="og:description" content="7 free play modes for babies and toddlers. No ads, no accounts, no tracking. Works offline.">
+<meta property="og:image" content="https://tinytaps.com/og-image.png">
+<meta property="og:url" content="https://tinytaps.com/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --bg: #08111f;
+    --bg2: #070d1a;
+    --card: rgba(8,16,31,0.82);
+    --card-border: rgba(159,211,255,0.18);
+    --card-border-glow: rgba(255,255,255,0.2);
+    --text: #f2f6ff;
+    --text-muted: #c4d3ec;
+    --text-dim: #7a90b8;
+    --accent: #9fd3ff;
+    --gold: #f0b429;
+    --gold2: #ff8c00;
+    --green: #34d399;
+    --font: 'Inter', 'Trebuchet MS', 'Segoe UI', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ======= STARFIELD CANVAS ======= */
+  #starfield {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ======= NAV ======= */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(7,13,26,0.85);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 24px;
+    height: 62px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-size: 1.18rem; font-weight: 800;
+    letter-spacing: -0.3px; flex-shrink: 0;
+  }
+  .nav-logo .logo-icon {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg,#1e3a5f,#0e2240);
+    border: 1px solid rgba(159,211,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 4px;
+    margin: 0 auto;
+    list-style: none;
+  }
+  .nav-links a {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    text-decoration: none; color: var(--text-muted);
+    font-size: 0.9rem; font-weight: 500;
+    transition: background 0.18s, color 0.18s;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    background: rgba(159,211,255,0.08); color: var(--text);
+  }
+  .nav-cta {
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 22px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    color: #0a0e1a; font-weight: 700; font-size: 0.92rem;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(240,180,41,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(240,180,41,0.45); }
+  .nav-cta:active { transform: scale(0.97); }
+  .nav-hamburger {
+    display: none; background: none; border: none;
+    cursor: pointer; padding: 8px; color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  /* ======= MAIN LAYOUT ======= */
+  main {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto;
+    padding: 32px 20px 80px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  /* ======= GLASS CARD ======= */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 36px 40px;
+    box-shadow: 0 2px 40px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  /* ======= HERO CARD ======= */
+  .hero-card {
+    text-align: center;
+    padding: 52px 40px 44px;
+  }
+  .hero-logo-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-bottom: 20px;
+  }
+  .hero-app-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: linear-gradient(135deg, #1b3a5c, #0b1e35);
+    border: 1px solid rgba(159,211,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+  }
+  .hero-title {
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-weight: 800; letter-spacing: -1.5px; line-height: 1;
+    color: var(--text);
+  }
+  .hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--text-muted);
+    max-width: 560px; margin: 0 auto 28px;
+    line-height: 1.6;
+  }
+
+  /* Feature badges */
+  .badges {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin-bottom: 32px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(159,211,255,0.15);
+    font-size: 0.88rem; color: var(--text-muted);
+    font-weight: 500; white-space: nowrap;
+  }
+  .badge .bi { font-size: 1rem; }
+
+  /* CTA Button */
+  .hero-cta {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 10px; width: 100%; max-width: 520px;
+    padding: 22px 36px; border-radius: 14px;
+    background: linear-gradient(90deg, #1e3460, #1a2d52);
+    border: 1px solid rgba(159,211,255,0.2);
+    color: var(--text); font-family: var(--font);
+    font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+    font-weight: 700; text-decoration: none; cursor: pointer;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+    transition: transform 0.15s, box-shadow 0.15s, background 0.18s;
+    margin-bottom: 20px;
+  }
+  .hero-cta:hover {
+    background: linear-gradient(90deg, #243e72, #1e3461);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  .hero-cta:active { transform: scale(0.98); }
+
+  /* Social proof */
+  .social-proof {
+    font-size: 0.87rem; color: var(--text-dim);
+    margin-bottom: 18px;
+  }
+
+  /* Live stats */
+  .live-stats {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center;
+  }
+  .live-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 999px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.87rem; color: var(--text-muted);
+    font-weight: 500;
+  }
+  #liveBadge { min-height: 36px; }
+
+  /* ======= PARENT TIP STRIP ======= */
+  .tip-strip {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    backdrop-filter: blur(8px);
+  }
+  .tip-strip-text { font-size: 0.92rem; color: var(--text-muted); }
+  .tip-strip-text strong { color: var(--text); }
+  .tip-info-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text-muted); font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  /* ======= SECTION HEADER ======= */
+  .section-header {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 1.5rem; font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .section-link {
+    font-size: 0.87rem; color: var(--accent);
+    text-decoration: none; font-weight: 600;
+    white-space: nowrap;
+  }
+  .section-link:hover { text-decoration: underline; }
+
+  /* ======= MODES GRID ======= */
+  .modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .mode-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 18px 18px;
+    display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer; text-decoration: none; color: inherit;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s;
+  }
+  .mode-card:hover {
+    background: rgba(159,211,255,0.06);
+    border-color: rgba(159,211,255,0.2);
+    transform: translateY(-2px);
+  }
+  .mode-icon { font-size: 1.8rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .mode-info .mode-name { font-weight: 700; font-size: 0.97rem; margin-bottom: 3px; }
+  .mode-info .mode-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
+
+  /* ======= 3-COLUMN FEATURE GRID ======= */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .feature-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px;
+  }
+  .feature-box .fb-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+  .feature-box .fb-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ======= TRUST / SAFE SECTION ======= */
+  .trust-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .trust-item {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .trust-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(52,211,153,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;
+  }
+  .trust-text strong { color: var(--green); font-size: 0.95rem; display: block; margin-bottom: 2px; }
+  .trust-text p { font-size: 0.87rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ======= FOOTER ======= */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--card-border);
+    padding: 28px 24px;
+    text-align: center;
+    color: var(--text-dim); font-size: 0.83rem; line-height: 1.8;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 6px 20px; justify-content: center; margin-bottom: 10px; }
+
+  /* ======= SHARE BUTTON ======= */
+  .share-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px; border-radius: 999px;
+    background: transparent; border: 1px solid rgba(159,211,255,0.22);
+    color: var(--text-muted); font-family: var(--font);
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    margin-top: 10px;
+  }
+  .share-btn:hover { background: rgba(159,211,255,0.08); color: var(--text); }
+
+  /* ======= SECTION LABEL ======= */
+  .section-label {
+    display: inline-flex; padding: 6px 14px; border-radius: 999px;
+    background: rgba(159,211,255,0.08);
+    border: 1px solid rgba(159,211,255,0.2);
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ======= RESPONSIVE ======= */
+  @media (max-width: 700px) {
+    .card { padding: 28px 20px; }
+    .hero-card { padding: 36px 20px 32px; }
+    .hero-title { letter-spacing: -1px; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .modes-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+    main { padding: 20px 14px 60px; }
+    .tip-strip { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+  @media (max-width: 440px) {
+    .badges { gap: 7px; }
+    .badge { font-size: 0.8rem; padding: 7px 12px; }
+    .modes-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<!-- ======= NAV ======= -->
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="TinyTaps home">
+      <div class="logo-icon">👶</div>
+      TinyTaps
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html" class="active" aria-current="page">🏠 Home</a></li>
+      <li><a href="tips.html">💡 Tips</a></li>
+      <li><a href="about.html">ℹ️ About</a></li>
+    </ul>
+    <a href="play.html" class="nav-cta" id="navCta">▶ Start Playing</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<!-- ======= MAIN ======= -->
+<main>
+
+  <!-- HERO CARD -->
+  <section class="card hero-card" aria-labelledby="heroTitle">
+    <div class="hero-logo-row">
+      <div class="hero-app-icon" aria-hidden="true">👶</div>
+      <h1 class="hero-title" id="heroTitle">TinyTaps</h1>
+    </div>
+
+    <p class="hero-subtitle">
+      A free, fullscreen play world where babies and toddlers tap, pop, paint
+      and giggle. Made for 6–36 months. No apps to install.
+    </p>
+
+    <!-- Feature badges -->
+    <div class="badges" role="list" aria-label="Key features">
+      <span class="badge" role="listitem">🛡️ No ads, ever</span>
+      <span class="badge" role="listitem">⚡ Instant, no setup</span>
+      <span class="badge" role="listitem">📱 Touch + tap + keyboard</span>
+      <span class="badge" role="listitem">🎨 7 play modes</span>
+    </div>
+
+    <!-- CTA -->
+    <a class="hero-cta" href="play.html" id="heroCta" aria-label="Start playing TinyTaps">
+      ▶ Start playing!
+    </a>
+
+    <p class="social-proof">
+      Made with ❤️ by a dad in Bengaluru — free forever.
+    </p>
+
+    <!-- Live stats -->
+    <div class="live-stats" id="liveBadge" aria-live="polite" aria-label="Live player count">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Share button -->
+    <button class="share-btn" id="btnShare" aria-label="Share TinyTaps with another parent">
+      💌 Share with another parent
+    </button>
+  </section>
+
+  <!-- PARENT TIP STRIP -->
+  <div class="tip-strip" role="note">
+    <p class="tip-strip-text">
+      👨‍👩‍👧 <strong>Parent panel:</strong> hold the top-left corner for 2 seconds to open settings, change modes, or adjust sound.
+    </p>
+    <a href="about.html" class="tip-info-btn" aria-label="Learn more about parent controls">ℹ</a>
+  </div>
+
+  <!-- PLAY MODES -->
+  <section class="card" aria-labelledby="modesTitle">
+    <div class="section-header">
+      <h2 class="section-title" id="modesTitle">7 Play Modes</h2>
+      <a href="play.html" class="section-link">Play now →</a>
+    </div>
+    <div class="modes-grid" role="list" aria-label="Play modes">
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Smash mode">
+        <span class="mode-icon" aria-hidden="true">✨</span>
+        <div class="mode-info">
+          <div class="mode-name">Smash</div>
+          <div class="mode-desc">Tap or smash — bursts of colour and sound on every tap.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Bubbles mode">
+        <span class="mode-icon" aria-hidden="true">🫧</span>
+        <div class="mode-info">
+          <div class="mode-name">Bubbles</div>
+          <div class="mode-desc">Pop floating bubbles with a satisfying pop sound.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Paint mode">
+        <span class="mode-icon" aria-hidden="true">🎨</span>
+        <div class="mode-info">
+          <div class="mode-name">Paint</div>
+          <div class="mode-desc">Finger paint with rainbow trails that glow and fade.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Animals mode">
+        <span class="mode-icon" aria-hidden="true">🐾</span>
+        <div class="mode-info">
+          <div class="mode-name">Animals</div>
+          <div class="mode-desc">Tap to meet an animal and hear its name read aloud.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Music mode">
+        <span class="mode-icon" aria-hidden="true">🎹</span>
+        <div class="mode-info">
+          <div class="mode-name">Music</div>
+          <div class="mode-desc">A colour piano where every note sounds musical.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Peekaboo mode">
+        <span class="mode-icon" aria-hidden="true">🙈</span>
+        <div class="mode-info">
+          <div class="mode-name">Peekaboo</div>
+          <div class="mode-desc">Tap the cloud to reveal a hidden friend.</div>
+        </div>
+      </a>
+      <a href="play.html" class="mode-card" role="listitem" aria-label="Colors mode">
+        <span class="mode-icon" aria-hidden="true">🌈</span>
+        <div class="mode-info">
+          <div class="mode-name">Colors</div>
+          <div class="mode-desc">Learn colours — each tap fills the screen and says the name.</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- WHY PARENTS TRUST IT -->
+  <section class="card" aria-labelledby="trustTitle">
+    <div class="section-label" aria-hidden="true">BUILT FOR PARENTS TO TRUST</div>
+    <h2 class="section-title" id="trustTitle" style="margin-bottom:24px">Safe by design</h2>
+
+    <ul class="trust-list">
+      <li class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🚫</div>
+        <div class="trust-text">
+          <strong>No ads, ever</strong>
+          <p>Nothing to click away, nothing to buy. TinyTaps will always be free and ad-free.</p>
+        </div>
+      </li>
+      <li class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔒</div>
+        <div class="trust-text">
+          <strong>No accounts, no tracking</strong>
+          <p>We never collect your child's data. The only number we know is how many devices are playing right now — anonymously.</p>
+        </div>
+      </li>
+      <li class="trust-item">
+        <div class="trust-icon" aria-hidden="true">✈️</div>
+        <div class="trust-text">
+          <strong>Works offline</strong>
+          <p>Add it to your home screen once and it works on flights, in cars, anywhere — no internet needed.</p>
+        </div>
+      </li>
+      <li class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🔐</div>
+        <div class="trust-text">
+          <strong>Toddler-locked</strong>
+          <p>No visible buttons for little fingers. Parents hold the top-left corner for 2 seconds to open the menu.</p>
+        </div>
+      </li>
+      <li class="trust-item">
+        <div class="trust-icon" aria-hidden="true">🎵</div>
+        <div class="trust-text">
+          <strong>Gentle by design</strong>
+          <p>Pentatonic sounds (everything sounds musical), soft colours, and a voice that celebrates your child by name.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- DESIGNED FOR REAL MOMENTS -->
+  <section class="card" aria-labelledby="momentsTitle">
+    <div class="section-label" aria-hidden="true">FOR REAL FAMILY LIFE</div>
+    <h2 class="section-title" id="momentsTitle" style="margin-bottom:20px">Built for those moments</h2>
+    <div class="feature-grid">
+      <div class="feature-box">
+        <div class="fb-title">🍽️ Restaurant dinner</div>
+        <div class="fb-desc">Works offline once added to home screen. Keep a toddler occupied without YouTube.</div>
+      </div>
+      <div class="feature-box">
+        <div class="fb-title">✈️ Long flight</div>
+        <div class="fb-desc">No Wi-Fi needed. Paint mode, bubble popping, and peekaboo for hours.</div>
+      </div>
+      <div class="feature-box">
+        <div class="fb-title">💻 Work-from-home</div>
+        <div class="fb-desc">Hand over your phone or tablet safely — the screen locks the toddler in play mode.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:28px">
+      <a href="play.html" class="hero-cta" style="max-width:360px;font-size:1.1rem;padding:18px 28px;margin-bottom:0" aria-label="Start playing TinyTaps now">
+        ▶ Start playing now
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ======= FOOTER ======= -->
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="tips.html">Tips</a>
+    <a href="about.html">About &amp; Privacy</a>
+    <a href="play.html">Play</a>
+  </div>
+  Made with ❤️ by a dad in Bengaluru for his son.<br>
+  Free forever. TinyTaps is play, not a substitute for real-world cuddles.<br>
+  <span style="font-size:0.78rem;opacity:0.55;letter-spacing:0.8px">TINYTAPS.COM</span>
+</footer>
+
+<script>
+"use strict";
+
+/* ===== CONFIG ===== */
+const PRESENCE_COUNT_URL = "";
+
+/* ===== STARFIELD ===== */
+(function(){
+  const cv = document.getElementById('starfield');
+  const cx = cv.getContext('2d');
+  let W = 0, H = 0;
+  const stars = [];
+  const STAR_COUNT = 90;
+
+  function resize(){
+    W = innerWidth; H = innerHeight;
+    cv.width = W; cv.height = H;
+  }
+  addEventListener('resize', resize); resize();
+
+  for(let i = 0; i < STAR_COUNT; i++){
+    stars.push({
+      x: Math.random(), y: Math.random(),
+      r: 0.5 + Math.random() * 2.2,
+      a: Math.random(),
+      da: 0.003 + Math.random() * 0.006,
+      hasCrescent: Math.random() < 0.4
+    });
+  }
+
+  function drawStar(s){
+    const x = s.x * W, y = s.y * H;
+    if(s.hasCrescent){
+      // Circle with inner ring (like tinyfingers)
+      cx.beginPath(); cx.arc(x, y, s.r * 2.8, 0, Math.PI*2);
+      cx.strokeStyle = `rgba(200,220,255,${s.a * 0.35})`;
+      cx.lineWidth = 1; cx.stroke();
+      cx.beginPath(); cx.arc(x, y, s.r * 0.7, 0, Math.PI*2);
+      cx.fillStyle = `rgba(230,240,255,${s.a * 0.9})`;
+      cx.fill();
+    } else {
+      cx.beginPath(); cx.arc(x, y, s.r, 0, Math.PI*2);
+      cx.fillStyle = `rgba(210,230,255,${s.a * 0.8})`;
+      cx.fill();
+    }
+  }
+
+  function loop(){
+    cx.clearRect(0, 0, W, H);
+    for(const s of stars){
+      s.a += s.da;
+      if(s.a > 1 || s.a < 0) s.da = -s.da;
+      drawStar(s);
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ===== LIVE BADGE ===== */
+async function refreshCount(){
+  if(!PRESENCE_COUNT_URL) return;
+  try{
+    const r = await fetch(PRESENCE_COUNT_URL);
+    const d = await r.json();
+    const el = document.getElementById('liveBadge');
+    if(d.count > 0){
+      el.innerHTML = `<span class="live-chip">🟢 ${d.count} ${d.count===1?'little one is':'little ones are'} playing right now</span>`;
+    }
+  }catch(e){}
+}
+refreshCount(); setInterval(refreshCount, 15000);
+
+/* ===== SHARE ===== */
+document.getElementById('btnShare').onclick = async () => {
+  const data = {
+    title: 'TinyTaps',
+    text: 'Free, safe play world for babies and toddlers — no ads, no tracking. My little one loves it!',
+    url: 'https://tinytaps.com'
+  };
+  try{
+    if(navigator.share) await navigator.share(data);
+    else { await navigator.clipboard.writeText(data.url); alert('Link copied!'); }
+  }catch(e){}
+};
+
+/* ===== HAMBURGER (mobile nav fallback) ===== */
+document.getElementById('hamburger').onclick = () => {
+  const data = {
+    title: 'TinyTaps',
+    text: 'Check out TinyTaps — a free play world for babies!',
+    url: 'https://tinytaps.com'
+  };
+  if(navigator.share) navigator.share(data).catch(()=>{});
+};
+
+/* ===== PWA ===== */
+if('serviceWorker' in navigator){
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+
+</body>
+</html>

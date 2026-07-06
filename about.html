@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08111f">
+<title>About TinyTaps — Privacy, Story &amp; FAQ</title>
+<meta name="description" content="TinyTaps exists for one very specific moment: when your toddler wants the keyboard. Learn about our privacy-first approach, the story behind the app, and who it's built for.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent; }
+  :root {
+    --bg:#08111f;--bg2:#070d1a;--card:rgba(8,16,31,0.82);--card-border:rgba(159,211,255,0.18);
+    --text:#f2f6ff;--text-muted:#c4d3ec;--text-dim:#7a90b8;--accent:#9fd3ff;
+    --gold:#f0b429;--gold2:#ff8c00;--green:#34d399;--font:'Inter','Trebuchet MS','Segoe UI',sans-serif;
+  }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;line-height:1.6; }
+  #starfield { position:fixed;inset:0;pointer-events:none;z-index:0; }
+
+  /* NAV */
+  nav { position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,13,26,0.85);border-bottom:1px solid var(--card-border); }
+  .nav-inner { max-width:1100px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:16px; }
+  .nav-logo { display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-size:1.18rem;font-weight:800;letter-spacing:-0.3px;flex-shrink:0; }
+  .nav-logo .logo-icon { width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#1e3a5f,#0e2240);border:1px solid rgba(159,211,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+  .nav-links { display:flex;align-items:center;gap:4px;margin:0 auto;list-style:none; }
+  .nav-links a { display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;text-decoration:none;color:var(--text-muted);font-size:0.9rem;font-weight:500;transition:background 0.18s,color 0.18s; }
+  .nav-links a:hover,.nav-links a.active { background:rgba(159,211,255,0.08);color:var(--text); }
+  .nav-cta { flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold2));color:#0a0e1a;font-weight:700;font-size:0.92rem;text-decoration:none;box-shadow:0 4px 20px rgba(240,180,41,0.3);transition:transform 0.15s,box-shadow 0.15s;white-space:nowrap; }
+  .nav-cta:hover { transform:translateY(-1px);box-shadow:0 6px 28px rgba(240,180,41,0.45); }
+  @media(max-width:700px){.nav-links{display:none;}}
+
+  /* MAIN */
+  main { position:relative;z-index:1;max-width:900px;margin:0 auto;padding:32px 20px 80px;display:flex;flex-direction:column;gap:16px; }
+  .card { background:var(--card);border:1px solid var(--card-border);border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:36px 40px;box-shadow:0 2px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.06); }
+  @media(max-width:700px){.card{padding:24px 18px;} main{padding:18px 12px 60px;}}
+
+  .section-label { display:inline-flex;padding:6px 14px;border-radius:999px;background:rgba(159,211,255,0.08);border:1px solid rgba(159,211,255,0.2);font-size:0.75rem;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase;margin-bottom:16px; }
+  .section-title { font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:16px; }
+  .lead-text { font-size:1.05rem;color:var(--text-muted);line-height:1.7;margin-bottom:20px; }
+
+  .badges { display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px; }
+  .badge { display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(159,211,255,0.15);font-size:0.87rem;color:var(--text-muted);font-weight:500; }
+
+  /* Two-column grid */
+  .two-col { display:grid;grid-template-columns:1fr 1fr;gap:14px; }
+  @media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+  .info-card { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px; }
+  .info-card .ic-label { font-size:0.72rem;font-weight:700;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:10px; }
+  .info-card h3 { font-size:1.05rem;font-weight:800;margin-bottom:8px; }
+  .info-card p { font-size:0.87rem;color:var(--text-muted);line-height:1.6; }
+
+  /* User types */
+  .user-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px; }
+  @media(max-width:500px){.user-grid{grid-template-columns:1fr;}}
+  .user-card { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px; }
+  .user-card .uc-icon { font-size:1.6rem;margin-bottom:8px; }
+  .user-card h3 { font-size:0.97rem;font-weight:700;margin-bottom:6px; }
+  .user-card p { font-size:0.83rem;color:var(--text-muted);line-height:1.5; }
+
+  /* Privacy list */
+  .privacy-list { list-style:none;display:flex;flex-direction:column;gap:16px;margin-top:6px; }
+  .privacy-item { display:flex;gap:14px;align-items:flex-start; }
+  .privacy-icon { width:34px;height:34px;border-radius:10px;background:rgba(52,211,153,0.12);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;margin-top:2px; }
+  .privacy-text strong { color:#34d399;display:block;font-size:0.95rem;margin-bottom:3px; }
+  .privacy-text p { font-size:0.85rem;color:var(--text-muted);line-height:1.5; }
+
+  /* FAQ */
+  .faq-list { display:flex;flex-direction:column;gap:4px; }
+  details { background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden; }
+  details[open] { border-color:rgba(159,211,255,0.2); }
+  summary { padding:16px 20px;cursor:pointer;font-weight:600;font-size:0.95rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px; }
+  summary::after { content:'＋';font-size:1.1rem;color:var(--text-dim);transition:transform 0.2s;flex-shrink:0; }
+  details[open] summary::after { content:'－'; }
+  .faq-body { padding:0 20px 16px;font-size:0.88rem;color:var(--text-muted);line-height:1.65; }
+
+  /* CTA bottom */
+  .hero-cta { display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:420px;padding:18px 28px;border-radius:14px;background:linear-gradient(90deg,#1e3460,#1a2d52);border:1px solid rgba(159,211,255,0.2);color:var(--text);font-family:var(--font);font-size:1.15rem;font-weight:700;text-decoration:none;box-shadow:0 4px 30px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);transition:transform 0.15s,box-shadow 0.15s;margin-top:4px; }
+  .hero-cta:hover { transform:translateY(-2px); }
+
+  /* Footer */
+  footer { position:relative;z-index:1;border-top:1px solid var(--card-border);padding:28px 24px;text-align:center;color:var(--text-dim);font-size:0.83rem;line-height:1.8; }
+  footer a { color:var(--accent);text-decoration:none; }
+  .footer-links { display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:center;margin-bottom:10px; }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">👶</div>
+      TinyTaps
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="tips.html">💡 Tips</a></li>
+      <li><a href="about.html" class="active" aria-current="page">ℹ️ About</a></li>
+    </ul>
+    <a href="play.html" class="nav-cta">▶ Start Playing</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="card" aria-labelledby="aboutTitle">
+    <div class="section-label">ABOUT &amp; PRIVACY</div>
+    <h1 class="section-title" id="aboutTitle">TinyTaps exists for one very specific moment:</h1>
+    <p class="lead-text">When you're working, and your toddler wants the keyboard. TinyTaps turns that chaos into a playful, fullscreen loop with less stress, less risk, and more giggles.</p>
+    <p style="font-weight:600;font-size:0.95rem;margin-bottom:14px">A safe keyboard &amp; screen toy for babies and toddlers</p>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px">TinyTaps is a playful fullscreen web app where toddlers can tap anywhere and instantly trigger colourful animations and musical sounds. Best for curious toddlers aged 6–36 months.</p>
+    <div class="badges">
+      <span class="badge">⚡ Open → fullscreen → play</span>
+      <span class="badge">🛡️ Anonymous by default</span>
+      <span class="badge">🌐 Static public site</span>
+      <span class="badge">🔒 No child data, ever</span>
+    </div>
+  </section>
+
+  <!-- STORY + WHAT IT IS -->
+  <div class="two-col">
+    <div class="card" style="padding:28px" aria-labelledby="storyTitle">
+      <div class="info-card ic-label" style="background:none;border:none;padding:0">THE STORY</div>
+      <h2 id="storyTitle" style="font-size:1.3rem;font-weight:800;margin-bottom:10px">A calmer handoff for the exact moment a toddler wants the keyboard</h2>
+      <p style="font-size:0.87rem;color:var(--text-muted);line-height:1.65">My 16-month-old kept grabbing my laptop. Every baby game app I tried was full of ads and manipulative popups. So I built TinyTaps — a plain website, nothing to install, 7 fullscreen play modes. Made in Bengaluru by a dad, for his son.</p>
+    </div>
+    <div class="card" style="padding:28px" aria-labelledby="whatTitle">
+      <div class="info-card ic-label" style="background:none;border:none;padding:0">WHAT TINYTAPS IS</div>
+      <h2 id="whatTitle" style="font-size:1.3rem;font-weight:800;margin-bottom:14px">Who is it for?</h2>
+      <div class="user-grid" style="margin-top:0">
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px;">
+          <div style="font-size:1.4rem;margin-bottom:6px">👨‍👩‍👧</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px">For parents</div>
+          <p style="font-size:0.82rem;color:var(--text-muted)">A calmer way to hand over the keyboard without worry.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:12px;padding:14px;">
+          <div style="font-size:1.4rem;margin-bottom:6px">👶</div>
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px">For toddlers</div>
+          <p style="font-size:0.82rem;color:var(--text-muted)">A fullscreen cause-and-effect loop built for tapping tiny fingers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY -->
+  <section class="card" aria-labelledby="privacyTitle">
+    <div class="section-label">PRIVACY</div>
+    <h2 class="section-title" id="privacyTitle" style="font-size:1.6rem;margin-bottom:20px">What we collect (almost nothing)</h2>
+    <ul class="privacy-list">
+      <li class="privacy-item">
+        <div class="privacy-icon">🚫</div>
+        <div class="privacy-text">
+          <strong>No analytics scripts</strong>
+          <p>No Google Analytics, no Meta Pixel, no fingerprinting of any kind. Zero third-party scripts on the play page.</p>
+        </div>
+      </li>
+      <li class="privacy-item">
+        <div class="privacy-icon">🔒</div>
+        <div class="privacy-text">
+          <strong>No cookies, no accounts</strong>
+          <p>The only thing stored on your device is the child's name you optionally type in — it never leaves your device.</p>
+        </div>
+      </li>
+      <li class="privacy-item">
+        <div class="privacy-icon">📊</div>
+        <div class="privacy-text">
+          <strong>Anonymous presence counter only</strong>
+          <p>The "X little ones playing right now" badge counts anonymous WebSocket connections. No IDs, no IP logging, no user data.</p>
+        </div>
+      </li>
+      <li class="privacy-item">
+        <div class="privacy-icon">🌐</div>
+        <div class="privacy-text">
+          <strong>Static public site</strong>
+          <p>TinyTaps is a static HTML/CSS/JS site on Cloudflare Pages. No server-side logic, no databases, no user profiles.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- FAQ -->
+  <section class="card" aria-labelledby="faqTitle">
+    <h2 class="section-title" id="faqTitle" style="font-size:1.5rem;margin-bottom:20px">Frequently asked questions</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Is TinyTaps really free?</summary>
+        <div class="faq-body">Yes — free forever. There are no premium tiers, no in-app purchases, and no plans to add any. It costs ~$10/year to run (domain registration). Everything else runs on Cloudflare's free tier.</div>
+      </details>
+      <details>
+        <summary>Will my toddler accidentally exit or click something?</summary>
+        <div class="faq-body">There are no visible buttons during play. To open the parent menu, you hold the top-left corner of the screen for 2 seconds. For extra safety, use Guided Access (iPhone/iPad) or App Pinning (Android) to prevent swipe-home and notifications.</div>
+      </details>
+      <details>
+        <summary>Does it work without internet?</summary>
+        <div class="faq-body">Yes. Once you've visited TinyTaps, add it to your home screen. The service worker caches everything needed. It will work on planes, in cars, and anywhere offline — permanently.</div>
+      </details>
+      <details>
+        <summary>What age is it designed for?</summary>
+        <div class="faq-body">6 to 36 months. The interaction model is dead simple: tap anywhere, something colourful happens. There's nothing to "figure out". Older toddlers enjoy the Animals and Colors modes where they can recognise and learn words.</div>
+      </details>
+      <details>
+        <summary>Is the child's name safe?</summary>
+        <div class="faq-body">The name you type (optional) is stored only in the device's localStorage. It is only used to personalise celebration messages ("Yay Aarav!"). It is never transmitted anywhere.</div>
+      </details>
+      <details>
+        <summary>Who made this?</summary>
+        <div class="faq-body">TinyTaps was made by a dad in Bengaluru, India for his 16-month-old son. It was built as a weekend project because existing baby apps were full of ads and dark patterns.</div>
+      </details>
+    </div>
+  </section>
+
+  <div style="text-align:center;padding:8px 0">
+    <a href="play.html" class="hero-cta">▶ Start playing now</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="tips.html">Tips</a>
+    <a href="about.html">About &amp; Privacy</a>
+    <a href="play.html">Play</a>
+  </div>
+  Made with ❤️ by a dad in Bengaluru for his son. Free forever.<br>
+  <span style="font-size:0.78rem;opacity:0.55;letter-spacing:0.8px">TINYTAPS.COM</span>
+</footer>
+
+<script>
+/* starfield */
+(function(){
+  const cv=document.getElementById('starfield'),cx=cv.getContext('2d');
+  let W=0,H=0;const stars=[];
+  function resize(){W=innerWidth;H=innerHeight;cv.width=W;cv.height=H;}
+  addEventListener('resize',resize);resize();
+  for(let i=0;i<80;i++) stars.push({x:Math.random(),y:Math.random(),r:0.5+Math.random()*2,a:Math.random(),da:0.003+Math.random()*0.006,hasCrescent:Math.random()<0.4});
+  function loop(){
+    cx.clearRect(0,0,W,H);
+    for(const s of stars){
+      s.a+=s.da; if(s.a>1||s.a<0) s.da=-s.da;
+      const x=s.x*W,y=s.y*H;
+      if(s.hasCrescent){cx.beginPath();cx.arc(x,y,s.r*2.8,0,Math.PI*2);cx.strokeStyle=`rgba(200,220,255,${s.a*0.35})`;cx.lineWidth=1;cx.stroke();cx.beginPath();cx.arc(x,y,s.r*0.7,0,Math.PI*2);cx.fillStyle=`rgba(230,240,255,${s.a*0.9})`;cx.fill();}
+      else{cx.beginPath();cx.arc(x,y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(210,230,255,${s.a*0.8})`;cx.fill();}
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

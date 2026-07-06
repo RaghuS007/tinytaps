@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08111f">
+<title>Screen-Time Tips &amp; Play Guides for Parents — TinyTaps</title>
+<meta name="description" content="Practical tips for parents on baby keyboard smash games, safe screen time for toddlers, offline play ideas, and how to get the most out of TinyTaps.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  :root{--bg:#08111f;--bg2:#070d1a;--card:rgba(8,16,31,0.82);--card-border:rgba(159,211,255,0.18);--text:#f2f6ff;--text-muted:#c4d3ec;--text-dim:#7a90b8;--accent:#9fd3ff;--gold:#f0b429;--gold2:#ff8c00;--green:#34d399;--font:'Inter','Trebuchet MS','Segoe UI',sans-serif;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;line-height:1.6;}
+  #starfield{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+  nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,13,26,0.85);border-bottom:1px solid var(--card-border);}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:16px;}
+  .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-size:1.18rem;font-weight:800;letter-spacing:-0.3px;flex-shrink:0;}
+  .nav-logo .logo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#1e3a5f,#0e2240);border:1px solid rgba(159,211,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .nav-links{display:flex;align-items:center;gap:4px;margin:0 auto;list-style:none;}
+  .nav-links a{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;text-decoration:none;color:var(--text-muted);font-size:0.9rem;font-weight:500;transition:background 0.18s,color 0.18s;}
+  .nav-links a:hover,.nav-links a.active{background:rgba(159,211,255,0.08);color:var(--text);}
+  .nav-cta{flex-shrink:0;display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold2));color:#0a0e1a;font-weight:700;font-size:0.92rem;text-decoration:none;box-shadow:0 4px 20px rgba(240,180,41,0.3);transition:transform 0.15s;white-space:nowrap;}
+  .nav-cta:hover{transform:translateY(-1px);}
+  @media(max-width:700px){.nav-links{display:none;}}
+
+  main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:32px 20px 80px;display:flex;flex-direction:column;gap:16px;}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:36px 40px;box-shadow:0 2px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.06);}
+  @media(max-width:700px){.card{padding:24px 18px;} main{padding:18px 12px 60px;}}
+
+  .section-label{display:inline-flex;padding:6px 14px;border-radius:999px;background:rgba(159,211,255,0.08);border:1px solid rgba(159,211,255,0.2);font-size:0.75rem;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase;margin-bottom:16px;}
+  .section-title{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-0.8px;line-height:1.2;margin-bottom:12px;}
+  .lead-text{font-size:1rem;color:var(--text-muted);line-height:1.7;}
+
+  /* Stats row */
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;}
+  @media(max-width:600px){.stats-row{grid-template-columns:1fr;}}
+  .stat-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px;}
+  .stat-box .sb-title{font-weight:700;font-size:0.95rem;margin-bottom:6px;}
+  .stat-box .sb-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;}
+
+  /* Guides grid */
+  .guides-category{margin-bottom:8px;}
+  .cat-header{display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;}
+  .cat-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+  .cat-label{font-weight:700;font-size:1rem;}
+  .cat-sub{font-size:0.85rem;color:var(--text-muted);margin-left:auto;}
+  .guide-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:4px 0 8px;}
+  .guide-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;text-decoration:none;color:inherit;transition:background 0.18s,border-color 0.18s,transform 0.15s;display:block;}
+  .guide-card:hover{background:rgba(159,211,255,0.06);border-color:rgba(159,211,255,0.2);transform:translateY(-2px);}
+  .guide-card .gc-emoji{font-size:1.8rem;margin-bottom:10px;display:block;}
+  .guide-card .gc-title{font-weight:700;font-size:0.93rem;margin-bottom:6px;line-height:1.35;}
+  .guide-card .gc-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;}
+  .guide-card .gc-read{display:inline-flex;align-items:center;gap:4px;font-size:0.8rem;color:var(--accent);font-weight:600;margin-top:10px;}
+
+  .hero-cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:420px;padding:18px 28px;border-radius:14px;background:linear-gradient(90deg,#1e3460,#1a2d52);border:1px solid rgba(159,211,255,0.2);color:var(--text);font-family:var(--font);font-size:1.1rem;font-weight:700;text-decoration:none;box-shadow:0 4px 30px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.08);transition:transform 0.15s;}
+  .hero-cta:hover{transform:translateY(-2px);}
+
+  footer{position:relative;z-index:1;border-top:1px solid var(--card-border);padding:28px 24px;text-align:center;color:var(--text-dim);font-size:0.83rem;line-height:1.8;}
+  footer a{color:var(--accent);text-decoration:none;}
+  .footer-links{display:flex;flex-wrap:wrap;gap:6px 20px;justify-content:center;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">👶</div>
+      TinyTaps
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="tips.html" class="active" aria-current="page">💡 Tips</a></li>
+      <li><a href="about.html">ℹ️ About</a></li>
+    </ul>
+    <a href="play.html" class="nav-cta">▶ Start Playing</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="card" aria-labelledby="tipsTitle">
+    <div class="section-label">PARENT RESOURCES</div>
+    <h1 class="section-title" id="tipsTitle">Toddler play &amp; screen-time guides for parents</h1>
+    <p class="lead-text">These guides help parents understand toddler keyboard curiosity, safe screen-time ideas, baby-friendly apps, and how to make the most of TinyTaps for your little one.</p>
+    <p style="font-weight:600;font-size:0.93rem;margin-top:16px;margin-bottom:6px">From keyboard curiosity to calmer handoffs</p>
+    <p style="font-size:0.86rem;color:var(--text-muted)">Browse tips for making TinyTaps work across different moments — flights, restaurants, work calls, and quiet evenings.</p>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="sb-title">7 play modes</div>
+        <div class="sb-desc">Each mode designed for a different developmental stage and attention span.</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-title">One safe family app</div>
+        <div class="sb-desc">Keyboard play, bubble popping, finger painting — all in one place.</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-title">Built for short use</div>
+        <div class="sb-desc">Designed for 5–15 minute supervised sessions, not passive hours of video.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEYBOARD & BABY CURIOSITY -->
+  <section class="card" aria-labelledby="catKboard">
+    <div class="cat-header" style="padding:0 0 16px">
+      <div class="cat-dot" style="background:#9fd3ff"></div>
+      <div>
+        <h2 class="cat-label" id="catKboard" style="font-size:1.1rem">Baby and keyboard curiosity</h2>
+        <div style="font-size:0.84rem;color:var(--text-muted);margin-top:2px">Why toddlers love smashing keyboards — and what to do about it</div>
+      </div>
+    </div>
+    <div class="guide-cards">
+      <div class="guide-card" tabindex="0" role="article" aria-label="Guide: Why do babies love keyboards?">
+        <span class="gc-emoji">🖥️</span>
+        <div class="gc-title">Why do babies love smashing keyboards?</div>
+        <div class="gc-desc">Toddlers are wired to explore cause and effect. Every keypress produces an immediate, unpredictable response — a letter, a sound, a reaction. It's endlessly stimulating.</div>
+        <span class="gc-read">Read guide →</span>
+      </div>
+      <div class="guide-card" tabindex="0" role="article" aria-label="Guide: Safe keyboard smash game alternatives">
+        <span class="gc-emoji">⌨️</span>
+        <div class="gc-title">Safe keyboard smash game alternatives</div>
+        <div class="gc-desc">Instead of handing over a work laptop, use TinyTaps — a fullscreen smash playground that does nothing to your files but still gives the cause-and-effect joy your toddler craves.</div>
+        <span class="gc-read">Try TinyTaps →</span>
+      </div>
+      <div class="guide-card" tabindex="0" role="article" aria-label="Guide: How TinyTaps uses pentatonic sounds">
+        <span class="gc-emoji">🎵</span>
+        <div class="gc-title">Why every TinyTaps sound is musical</div>
+        <div class="gc-desc">TinyTaps uses pentatonic scale notes — meaning no combination of taps sounds dissonant. Everything sounds like music, even the most chaotic keyboard smash session.</div>
+        <span class="gc-read">Learn more →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODES GUIDE -->
+  <section class="card" aria-labelledby="catModes">
+    <div class="cat-header" style="padding:0 0 16px">
+      <div class="cat-dot" style="background:#34d399"></div>
+      <div>
+        <h2 class="cat-label" id="catModes" style="font-size:1.1rem">Which mode to pick?</h2>
+        <div style="font-size:0.84rem;color:var(--text-muted);margin-top:2px">A quick guide for parents on choosing the right TinyTaps mode by age and mood</div>
+      </div>
+    </div>
+    <div class="guide-cards">
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">✨</span>
+        <div class="gc-title">Smash mode — best for pure chaos</div>
+        <div class="gc-desc">Perfect for ages 6–18 months. Any tap, swipe, or keypress produces an instant burst of colour and sound. No objectives, just joy.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🫧</span>
+        <div class="gc-title">Bubbles — best for focused toddlers</div>
+        <div class="gc-desc">Floating bubbles require deliberate tapping to pop. Great for toddlers who are starting to aim and point (12–24 months).</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🎨</span>
+        <div class="gc-title">Paint — best for creative babies</div>
+        <div class="gc-desc">A rainbow finger-painting canvas. Drag or swipe to create glowing trails. Great for older toddlers who like to "make something".</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🐾</span>
+        <div class="gc-title">Animals — best for language learners</div>
+        <div class="gc-desc">Each tap reveals a large animal and reads its name aloud. Perfect for 18–36 month toddlers learning animal names and words.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🌈</span>
+        <div class="gc-title">Colors — best for learning colours</div>
+        <div class="gc-desc">The screen fills with a bold colour and says its name. A great bedtime wind-down mode — calm, repetitive, and educational.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🙈</span>
+        <div class="gc-title">Peekaboo — best for giggles</div>
+        <div class="gc-desc">A hidden friend behind a cloud — tap to reveal! Builds anticipation and object permanence. Great for 9–24 months.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFLINE & TRAVEL -->
+  <section class="card" aria-labelledby="catTravel">
+    <div class="cat-header" style="padding:0 0 16px">
+      <div class="cat-dot" style="background:#f0b429"></div>
+      <div>
+        <h2 class="cat-label" id="catTravel" style="font-size:1.1rem">Offline &amp; travel tips</h2>
+        <div style="font-size:0.84rem;color:var(--text-muted);margin-top:2px">Making TinyTaps work on flights, in cars, and in restaurants</div>
+      </div>
+    </div>
+    <div class="guide-cards">
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">✈️</span>
+        <div class="gc-title">How to install TinyTaps for offline use</div>
+        <div class="gc-desc">Open TinyTaps in Chrome or Safari. Tap the Share button → "Add to Home Screen". Once installed, it works completely offline — no Wi-Fi needed on the plane.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🍽️</span>
+        <div class="gc-title">The 10-minute restaurant solution</div>
+        <div class="gc-desc">Pre-install TinyTaps before your dinner. Hand it over in Bubbles or Peekaboo mode. The toddler-lock means no accidental exits while you eat in peace.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🚗</span>
+        <div class="gc-title">Car trips without YouTube</div>
+        <div class="gc-desc">TinyTaps works in airplane mode. Use Music mode for a calmer, less stimulating experience during longer drives. Pentatonic notes = no annoying jingles.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN TIME -->
+  <section class="card" aria-labelledby="catSafe">
+    <div class="cat-header" style="padding:0 0 16px">
+      <div class="cat-dot" style="background:#c77dff"></div>
+      <div>
+        <h2 class="cat-label" id="catSafe" style="font-size:1.1rem">Screen time for toddlers</h2>
+        <div style="font-size:0.84rem;color:var(--text-muted);margin-top:2px">Practical guidance on supervised vs passive screen time</div>
+      </div>
+    </div>
+    <div class="guide-cards">
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">📱</span>
+        <div class="gc-title">Active vs passive screen time</div>
+        <div class="gc-desc">Watching YouTube is passive. TinyTaps is active — every interaction requires a tap, a decision, and produces an immediate physical result. That's closer to play than viewing.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">⏱️</span>
+        <div class="gc-title">How long is okay?</div>
+        <div class="gc-desc">TinyTaps is designed for short sessions (5–15 minutes) as a supervised handoff tool, not a babysitter. Use it for those specific moments — not for extended periods.</div>
+      </div>
+      <div class="guide-card" tabindex="0" role="article">
+        <span class="gc-emoji">🔒</span>
+        <div class="gc-title">Using Guided Access &amp; App Pinning</div>
+        <div class="gc-desc">For extra safety: use iOS Guided Access or Android App Pinning to prevent your toddler from swiping home, opening notifications, or changing apps.</div>
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align:center;padding:8px 0">
+    <a href="play.html" class="hero-cta">▶ Try TinyTaps now — it's free</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="tips.html">Tips</a>
+    <a href="about.html">About &amp; Privacy</a>
+    <a href="play.html">Play</a>
+  </div>
+  Made with ❤️ by a dad in Bengaluru for his son. Free forever.<br>
+  <span style="font-size:0.78rem;opacity:0.55;letter-spacing:0.8px">TINYTAPS.COM</span>
+</footer>
+
+<script>
+(function(){
+  const cv=document.getElementById('starfield'),cx=cv.getContext('2d');
+  let W=0,H=0;const stars=[];
+  function resize(){W=innerWidth;H=innerHeight;cv.width=W;cv.height=H;}
+  addEventListener('resize',resize);resize();
+  for(let i=0;i<80;i++) stars.push({x:Math.random(),y:Math.random(),r:0.5+Math.random()*2,a:Math.random(),da:0.003+Math.random()*0.006,hasCrescent:Math.random()<0.4});
+  function loop(){
+    cx.clearRect(0,0,W,H);
+    for(const s of stars){
+      s.a+=s.da; if(s.a>1||s.a<0) s.da=-s.da;
+      const x=s.x*W,y=s.y*H;
+      if(s.hasCrescent){cx.beginPath();cx.arc(x,y,s.r*2.8,0,Math.PI*2);cx.strokeStyle=`rgba(200,220,255,${s.a*0.35})`;cx.lineWidth=1;cx.stroke();cx.beginPath();cx.arc(x,y,s.r*0.7,0,Math.PI*2);cx.fillStyle=`rgba(230,240,255,${s.a*0.9})`;cx.fill();}
+      else{cx.beginPath();cx.arc(x,y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(210,230,255,${s.a*0.8})`;cx.fill();}
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+name = "tinytaps-presence"
+main = "presence.js"
+compatibility_date = "2026-01-01"
+
+[[durable_objects.bindings]]
+name = "PRESENCE"
+class_name = "Presence"
+
+# SQLite-backed class: required on the Workers Free plan
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Presence"]
