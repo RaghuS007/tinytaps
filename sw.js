@@ -1,4 +1,4 @@
-const CACHE = 'tinytaps-v7';
+const CACHE = 'tinytaps-v8';
 const ASSETS = [
   '/',
   '/play',
