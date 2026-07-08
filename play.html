@@ -41,6 +41,7 @@
   #start p { font-size:clamp(16px,3.2vw,25px); color:#c4d3ec; max-width:600px; line-height:1.5; }
   #start small { color:#7a90b8; font-size:14px; margin-top:8px; }
   @keyframes bounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-16px) scale(1.08)} }
+  @keyframes pulse { 0%,100%{transform:scale(1); opacity:0.8;} 50%{transform:scale(1.05); opacity:1;} }
   
   /* Hold zone lock mechanics */
   #holdzone { position:fixed; top:0; left:0; width:130px; height:130px; z-index:40; }
@@ -208,20 +209,66 @@
   </div>
 </div>
 
+<div id="sleepyScreen" style="position:fixed; inset:0; z-index:70; display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; background:radial-gradient(circle at 50% 45%, #050b14 0%, #02050b 80%); color:#fff; text-align:center; padding:20px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
+  <div style="font-size:clamp(64px,18vw,140px); animation:pulse 3s ease-in-out infinite;">😴💤</div>
+  <h1 style="font-size:clamp(30px,6vw,60px); font-weight:800; color:#c4d3ec; letter-spacing:-1px;">TinyTaps is Sleeping...</h1>
+  <p style="font-size:clamp(16px,3vw,24px); color:#7a90b8; max-width:550px; line-height:1.5; margin-top:8px;">Shh! TinyTaps is taking a nap now. Time for real-world cuddles and quiet play! 🧸</p>
+  <small style="color:#4a5b78; font-size:14px; margin-top:20px;">Parents: hold the top-left corner for 2 seconds to open settings.</small>
+</div>
+
+<div id="resumeScreen" style="position:fixed; inset:0; z-index:62; display:none; flex-direction:column; align-items:center; justify-content:center; gap:24px; background:rgba(8,17,31,0.95); color:#fff; text-align:center; padding:20px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+  <div style="font-size:clamp(64px,15vw,120px);">⚠️👋</div>
+  <h1 style="font-size:clamp(28px,6vw,54px); font-weight:800; color:#fff; letter-spacing:-1px;">Oops! Play paused</h1>
+  <p style="font-size:clamp(16px,3vw,22px); color:#c4d3ec; max-width:500px;">Tap below to return to fullscreen play!</p>
+  <button id="btnResumeFS" style="font:inherit; font-size:20px; font-weight:700; padding:18px 36px; border-radius:999px; border:none; background:linear-gradient(90deg, #9fd3ff, #ff6b9d); color:#0a0e1a; cursor:pointer; box-shadow:0 6px 25px rgba(159,211,255,0.45); transition:transform 0.15s;">▶ Resume Play</button>
+  <small style="color:#7a90b8; font-size:14px; margin-top:12px;">Parents: hold the top-left corner for 2 seconds for settings.</small>
+</div>
+
+
 <div id="panel">
   <h2>👪 Parent menu</h2>
   <div id="live"></div>
+  
+  <div style="font-size:14px; font-weight:700; color:#7a90b8; text-transform:uppercase; margin-top:10px;">Select Play Mode</div>
   <div class="row" id="modeRow"></div>
+  
+  <div style="font-size:14px; font-weight:700; color:#7a90b8; text-transform:uppercase; margin-top:10px;">Child Profile</div>
+  <div class="row" style="align-items: center; gap: 15px;">
+    <div class="namebox" style="margin-top:0;">
+      <label for="childName" style="font-size:15px;">Name:</label>
+      <input id="childName" maxlength="20" placeholder="e.g. Saathvik" style="padding: 10px; width: 140px; font-size: 15px;">
+    </div>
+    <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+      <label style="font-size:15px; color:#c4d3ec;">Age Group:</label>
+      <select id="childAge" style="font:inherit; font-size:15px; padding:8px 12px; border-radius:10px; background:#101a2d; color:#fff; border:1px solid rgba(159,211,255,0.25);">
+        <option value="baby">Sensory Baby (6-18 months)</option>
+        <option value="toddler">Explorer Toddler (18-36 months)</option>
+      </select>
+    </div>
+  </div>
+
+  <div style="font-size:14px; font-weight:700; color:#7a90b8; text-transform:uppercase; margin-top:10px;">Parent Controls</div>
   <div class="row">
     <button class="util" id="btnFull">⛶ Fullscreen</button>
     <button class="util" id="btnSound">🔊 Sound: on</button>
-    <button class="util" id="btnVoice">🤐 Voice: off</button>
+    <button class="util" id="btnVoice">🗣️ Voice: on</button>
     <button class="util" id="btnShare">💌 Share TinyTaps</button>
   </div>
-  <div class="namebox">
-    <label for="childName">Child's name:</label>
-    <input id="childName" maxlength="20" placeholder="e.g. Saathvik">
+
+  <div class="row" style="align-items: center; gap: 15px; margin-top: 5px;">
+    <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
+      <label style="font-size:15px; color:#c4d3ec;">Screen Time Limit:</label>
+      <select id="screenTimeLimit" style="font:inherit; font-size:15px; padding:8px 12px; border-radius:10px; background:#101a2d; color:#fff; border:1px solid rgba(159,211,255,0.25);">
+        <option value="0">Off (No Limit)</option>
+        <option value="5">5 minutes</option>
+        <option value="10">10 minutes</option>
+        <option value="15">15 minutes</option>
+        <option value="20">20 minutes</option>
+      </select>
+    </div>
+    <button class="util" id="btnEndSession" style="background:#4a1525; color:#ff8c9d; border-color:rgba(255,140,157,0.15); font-size:15px; padding:10px 15px;">📊 End Session &amp; Stats</button>
   </div>
+
   <button class="close" id="btnClose">▶ Back to playing</button>
 </div>
 
@@ -250,7 +297,12 @@ const EMOJIS=['⭐','🌈','🎈','🐣','🍎','🌸','🚗','⚽','🦋','🌟
 let childName = load('tt_name','');
 
 /* ================= audio ================= */
-let AC=null, soundOn=true, voiceOn=false;
+let AC=null;
+let soundOn = load('tt_sound', 'on') === 'on';
+let voiceOn = load('tt_voice', 'on') === 'on';
+let childAge = load('tt_age', 'toddler');
+let screenTimeLimit = parseInt(load('tt_limit', '0'));
+let isSleeping = false;
 const PENTA=[261.63,293.66,329.63,392,440,523.25,587.33,659.25,784,880];
 function audio(){ if(!AC){ AC=new (window.AudioContext||window.webkitAudioContext)(); } if(AC.state==='suspended') AC.resume(); return AC; }
 function note(freq, dur=0.5, vol=0.25){
@@ -355,8 +407,21 @@ MODES.smash={
   name:'✨ Smash', bg:'#141433',
   down(x,y,id,forceItem){
     burst(x,y,null,22);
-    if(forceItem) floatEmoji(x,y,forceItem);
-    else if(Math.random()<0.35) floatEmoji(x,y,pick(SMASH_EXTRAS));
+    if(forceItem) {
+      floatEmoji(x,y,forceItem);
+      if (childAge === 'toddler') speak(forceItem);
+    } else if(Math.random()<0.35) {
+      const item = pick(SMASH_EXTRAS);
+      floatEmoji(x,y,item);
+      if (childAge === 'toddler' && Math.random() < 0.5) {
+        const emojiNames = {
+          '⭐':'Star','🌈':'Rainbow','🎈':'Balloon','🐣':'Chick','🍎':'Apple','🌸':'Flower',
+          '🚗':'Car','⚽':'Ball','🦋':'Butterfly','🌟':'Star','🐠':'Fish','🍓':'Strawberry'
+        };
+        const spoken = emojiNames[item] || item;
+        speak(spoken);
+      }
+    }
     note(pick(PENTA),0.6);
   },
   key(e){
@@ -374,16 +439,22 @@ MODES.bubbles={
   enter(){ bubbles=[]; },
   down(x,y){
     let hit=false;
-    for(const b of bubbles){ if(!b.dead && Math.hypot(b.x-x,b.y-y)<b.r+45){ b.dead=true; hit=true;
-      burst(b.x,b.y,b.color,14); pop(); } }
+    let hitTolerance = (childAge === 'baby') ? 80 : 45;
+    for(const b of bubbles){
+      if(!b.dead && Math.hypot(b.x-x,b.y-y) < b.r + hitTolerance){
+        b.dead=true; hit=true;
+        burst(b.x,b.y,b.color,14); pop();
+      }
+    }
     if(!hit){ bubbles.push(newBubble(x,y)); note(pick(PENTA),0.3,0.15); }
   },
   key(){ bubbles.push(newBubble(rand(60,W-60),H+40)); },
   draw(){
     if(bubbles.length<10 && Math.random()<0.05) bubbles.push(newBubble(rand(60,W-60),H+50));
     bubbles=bubbles.filter(b=>!b.dead && b.y>-100);
+    let speedScale = (childAge === 'baby') ? 0.5 : 1.0;
     for(const b of bubbles){
-      b.y-=b.spd; b.x+=Math.sin(b.y/45+b.wob)*1.4;
+      b.y -= (b.spd * speedScale); b.x += Math.sin(b.y/45+b.wob)*1.4;
       ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,7);
       ctx.fillStyle=b.color+'33'; ctx.fill();
       ctx.lineWidth=4; ctx.strokeStyle=b.color; ctx.stroke();
@@ -403,8 +474,10 @@ MODES.paint={
     hue=(hue+3)%360;
     const grad=ctx.createLinearGradient(p.x,p.y,x,y);
     grad.addColorStop(0,`hsl(${hue},95%,62%)`); grad.addColorStop(1,`hsl(${(hue+40)%360},95%,62%)`);
-    ctx.strokeStyle=grad; ctx.lineCap='round'; ctx.lineWidth=26;
-    ctx.shadowBlur=24; ctx.shadowColor=`hsl(${hue},95%,62%)`;
+    ctx.strokeStyle=grad; ctx.lineCap='round';
+    ctx.lineWidth = (childAge === 'baby') ? 40 : 26;
+    ctx.shadowBlur = (childAge === 'baby') ? 35 : 24;
+    ctx.shadowColor=`hsl(${hue},95%,62%)`;
     ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(x,y); ctx.stroke();
     ctx.shadowBlur=0; p.x=x; p.y=y;
   },
@@ -540,7 +613,13 @@ MODES.colors={
 let startGone=false;
 const panel=document.getElementById('panel');
 const reportEl=document.getElementById('report');
-function inPlay(){ return startGone && panel.style.display!=='flex' && reportEl.style.display!=='flex'; }
+function inPlay(){
+  return startGone 
+      && panel.style.display!=='flex' 
+      && reportEl.style.display!=='flex'
+      && document.getElementById('sleepyScreen').style.display!=='flex'
+      && document.getElementById('resumeScreen').style.display!=='flex';
+}
 canvas.addEventListener('pointerdown', e=>{
   if(!inPlay()) return; e.preventDefault(); audio();
   const m=MODES[mode]; m.down && m.down(e.clientX,e.clientY,e.pointerId);
@@ -570,6 +649,15 @@ function loop(){
   m.draw && m.draw();
   stepParticles();
   drawCheer();
+  
+  // Screen time tracking
+  if (screenTimeLimit > 0 && startGone && !isSleeping && !reportShown) {
+    const elapsed = (Date.now() - sessionStart) / 1000 / 60;
+    if (elapsed >= screenTimeLimit) {
+      triggerSleep();
+    }
+  }
+  
   requestAnimationFrame(loop);
 }
 loop();
@@ -584,10 +672,41 @@ function requestFS(){
   if(req){ try{ Promise.resolve(req.call(el)).catch(()=>{}); }catch(e){} }
 }
 let reportShown=false;
-function onFSChange(){
-  if(!isFullscreen() && startGone && !reportShown && panel.style.display!=='flex') endSession();
+
+function triggerSleep() {
+  isSleeping = true;
+  startGone = false;
+  liveCounterEl.style.display = 'none';
+  document.getElementById('sleepyScreen').style.display = 'flex';
+  document.getElementById('resumeScreen').style.display = 'none';
+  
+  if (soundOn) {
+    const sleepyNotes = [523.25, 440, 392, 329.63, 293.66, 261.63];
+    sleepyNotes.forEach((f, i) => {
+      setTimeout(() => {
+        if (isSleeping) note(f, 1.2, 0.18);
+      }, i * 600);
+    });
+  }
+  speak("TinyTaps is sleeping now. Time for real-world cuddles!");
 }
-['fullscreenchange','webkitfullscreenchange','MSFullscreenChange'].forEach(ev=>document.addEventListener(ev,onFSChange));
+
+function showResumeScreen(){
+  document.getElementById('resumeScreen').style.display='flex';
+}
+
+const fsSupported = !!(document.documentElement.requestFullscreen || 
+                       document.documentElement.webkitRequestFullscreen || 
+                       document.documentElement.msRequestFullscreen);
+
+function onFSChange(){
+  if(!isFullscreen() && startGone && !reportShown && !isSleeping && panel.style.display!=='flex') {
+    showResumeScreen();
+  }
+}
+if(fsSupported){
+  ['fullscreenchange','webkitfullscreenchange','MSFullscreenChange'].forEach(ev=>document.addEventListener(ev,onFSChange));
+}
 
 /* ================= smash report ================= */
 function chaosLevel(score){
@@ -702,24 +821,77 @@ function setMode(k){
   document.querySelectorAll('#panel .mode').forEach(b=>b.classList.toggle('active', b.dataset.mode===k));
 }
 function openPanel(){ holdring.style.display='none'; panel.style.display='flex'; }
-function closePanel(){ panel.style.display='none'; }
+function closePanel(){
+  panel.style.display='none';
+  if (isSleeping) {
+    const elapsed = (Date.now() - sessionStart) / 1000 / 60;
+    if (screenTimeLimit === 0 || elapsed < screenTimeLimit) {
+      isSleeping = false;
+      startGone = true;
+      document.getElementById('sleepyScreen').style.display = 'none';
+      liveCounterEl.style.display = 'block';
+      sessionStart = Date.now();
+      speak("Welcome back!");
+      requestFS();
+    }
+  }
+}
 document.getElementById('btnClose').onclick=closePanel;
 document.getElementById('btnFull').onclick=()=>{
   if(document.fullscreenElement) document.exitFullscreen();
   else document.documentElement.requestFullscreen().catch(()=>{});
 };
 document.getElementById('btnSound').onclick=e=>{
-  soundOn=!soundOn; e.target.textContent=soundOn?'🔊 Sound: on':'🔇 Sound: off'; };
+  soundOn=!soundOn;
+  e.target.textContent=soundOn?'🔊 Sound: on':'🔇 Sound: off';
+  store('tt_sound', soundOn ? 'on' : 'off');
+};
 document.getElementById('btnVoice').onclick=e=>{
-  voiceOn=!voiceOn; e.target.textContent=voiceOn?'🗣️ Voice: on':'🤐 Voice: off'; };
+  voiceOn=!voiceOn;
+  e.target.textContent=voiceOn?'🗣️ Voice: on':'🤐 Voice: off';
+  store('tt_voice', voiceOn ? 'on' : 'off');
+};
 document.getElementById('btnShare').onclick=async()=>{
   const data={title:'TinyTaps', text:'A free, safe play world for babies and toddlers — no ads, no tracking. My little one loves it!', url:'https://tinytaps.com'};
   try{ if(navigator.share) await navigator.share(data);
     else { await navigator.clipboard.writeText(data.url); alert('Link copied!'); } }catch(e){}
 };
+
+// Child profile input and dropdown setup
 const nameInput=document.getElementById('childName');
 nameInput.value=childName;
 nameInput.addEventListener('input', ()=>{ childName=nameInput.value.trim(); store('tt_name',childName); });
+
+const ageSelect = document.getElementById('childAge');
+ageSelect.value = childAge;
+ageSelect.addEventListener('change', () => {
+  childAge = ageSelect.value;
+  store('tt_age', childAge);
+  speak(childAge === 'baby' ? "Sensory mode active!" : "Explorer mode active!");
+});
+
+const limitSelect = document.getElementById('screenTimeLimit');
+limitSelect.value = screenTimeLimit;
+limitSelect.addEventListener('change', () => {
+  screenTimeLimit = parseInt(limitSelect.value);
+  store('tt_limit', screenTimeLimit);
+  if (screenTimeLimit > 0) {
+    sessionStart = Date.now();
+  }
+});
+
+document.getElementById('btnEndSession').onclick = () => {
+  closePanel();
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(()=>{});
+  }
+  endSession();
+};
+
+// Apply loaded states to UI buttons
+document.getElementById('btnSound').textContent = soundOn ? '🔊 Sound: on' : '🔇 Sound: off';
+document.getElementById('btnVoice').textContent = voiceOn ? '🗣️ Voice: on' : '🤐 Voice: off';
+
 setMode('smash');
 
 /* ================= presence (graceful) ================= */

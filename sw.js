@@ -1,9 +1,10 @@
-const CACHE = 'tinytaps-v8';
+const CACHE = 'tinytaps-v9';
 const ASSETS = [
   '/',
-  '/play',
-  '/tips',
-  '/about',
+  '/index.html',
+  '/play.html',
+  '/tips.html',
+  '/about.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'
@@ -32,20 +33,21 @@ self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return; // never cache the presence worker
 
-  // Map incoming requests to the cached clean URLs
-  let requestToMatch = e.request;
-  
-  if (url.pathname === '/index.html') {
-    requestToMatch = '/';
-  } else if (url.pathname.endsWith('.html')) {
-    const cleanPath = url.pathname.slice(0, -5);
-    if (['/play', '/tips', '/about'].includes(cleanPath)) {
-      requestToMatch = cleanPath;
-    }
+  let path = url.pathname;
+
+  // Normalise clean URLs and HTML extensions
+  if (path === '/' || path === '/index.html') {
+    path = '/index.html';
+  } else if (path === '/play' || path === '/play.html') {
+    path = '/play.html';
+  } else if (path === '/tips' || path === '/tips.html') {
+    path = '/tips.html';
+  } else if (path === '/about' || path === '/about.html') {
+    path = '/about.html';
   }
 
   e.respondWith(
-    caches.match(requestToMatch).then(hit => {
+    caches.match(path).then(hit => {
       if (hit) return hit;
       return fetch(e.request).then(res => {
         if (res && res.status === 200) {
@@ -54,7 +56,7 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => {
-        return caches.match('/play').then(fallback => {
+        return caches.match('/play.html').then(fallback => {
           return fallback || Response.error();
         });
       });
