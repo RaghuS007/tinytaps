@@ -1,10 +1,15 @@
-const CACHE = 'tinytaps-v9';
+const CACHE = 'tinytaps-v10';
+const isLocal = location.hostname === 'localhost' || 
+                location.hostname === '127.0.0.1' || 
+                location.hostname.startsWith('192.168.') || 
+                location.hostname.startsWith('10.') || 
+                location.hostname.startsWith('127.') || 
+                location.hostname.endsWith('.local') ||
+                location.hostname === '[::1]';
+
 const ASSETS = [
   '/',
-  '/index.html',
-  '/play.html',
-  '/tips.html',
-  '/about.html',
+  ...(isLocal ? ['/index.html', '/play.html', '/tips.html', '/about.html'] : ['/play', '/tips', '/about']),
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'
@@ -35,15 +40,17 @@ self.addEventListener('fetch', e => {
 
   let path = url.pathname;
 
-  // Normalise clean URLs and HTML extensions
-  if (path === '/' || path === '/index.html') {
-    path = '/index.html';
-  } else if (path === '/play' || path === '/play.html') {
-    path = '/play.html';
-  } else if (path === '/tips' || path === '/tips.html') {
-    path = '/tips.html';
-  } else if (path === '/about' || path === '/about.html') {
-    path = '/about.html';
+  // Normalise clean URLs and HTML extensions based on environment
+  if (isLocal) {
+    if (path === '/') path = '/index.html';
+    else if (path === '/play') path = '/play.html';
+    else if (path === '/tips') path = '/tips.html';
+    else if (path === '/about') path = '/about.html';
+  } else {
+    if (path === '/index.html') path = '/';
+    else if (path === '/play.html') path = '/play';
+    else if (path === '/tips.html') path = '/tips';
+    else if (path === '/about.html') path = '/about';
   }
 
   e.respondWith(
@@ -56,7 +63,7 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => {
-        return caches.match('/play.html').then(fallback => {
+        return caches.match(isLocal ? '/play.html' : '/play').then(fallback => {
           return fallback || Response.error();
         });
       });
