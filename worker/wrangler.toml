@@ -10,3 +10,7 @@ class_name = "Presence"
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Presence"]
+
+[assets]
+directory = "../"
+

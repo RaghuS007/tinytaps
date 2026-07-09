@@ -278,7 +278,7 @@
 <script>
 "use strict";
 /* ====== config: set after deploying the worker, e.g. "wss://tinytaps-presence.YOURNAME.workers.dev/ws" ====== */
-const PRESENCE_URL = "";
+const PRESENCE_URL = "wss://tinytaps-presence.ritzy-windshield.workers.dev/ws";
 
 /* ================= basics ================= */
 const canvas = document.getElementById('stage');
@@ -701,13 +701,20 @@ const fsSupported = !!(document.documentElement.requestFullscreen ||
                        document.documentElement.msRequestFullscreen);
 
 function onFSChange(){
-  if(!isFullscreen() && startGone && !reportShown && !isSleeping && panel.style.display!=='flex') {
+  if(isFullscreen()){
+    document.getElementById('resumeScreen').style.display='none';
+  }else if(startGone && !reportShown && !isSleeping && panel.style.display!=='flex') {
     showResumeScreen();
   }
 }
 if(fsSupported){
   ['fullscreenchange','webkitfullscreenchange','MSFullscreenChange'].forEach(ev=>document.addEventListener(ev,onFSChange));
 }
+
+document.getElementById('btnResumeFS').onclick=()=>{
+  document.getElementById('resumeScreen').style.display='none';
+  requestFS();
+};
 
 /* ================= smash report ================= */
 function chaosLevel(score){
