@@ -221,8 +221,11 @@
   <div style="font-size:clamp(64px,15vw,120px);">⚠️👋</div>
   <h1 style="font-size:clamp(28px,6vw,54px); font-weight:800; color:#fff; letter-spacing:-1px;">Oops! Play paused</h1>
   <p style="font-size:clamp(16px,3vw,22px); color:#c4d3ec; max-width:500px;">Tap below to return to fullscreen play!</p>
-  <button id="btnResumeFS" style="font:inherit; font-size:20px; font-weight:700; padding:18px 36px; border-radius:999px; border:none; background:linear-gradient(90deg, #9fd3ff, #ff6b9d); color:#0a0e1a; cursor:pointer; box-shadow:0 6px 25px rgba(159,211,255,0.45); transition:transform 0.15s;">▶ Resume Play</button>
-  <small style="color:#7a90b8; font-size:14px; margin-top:12px;">Parents: hold the top-left corner for 2 seconds for settings.</small>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; width:100%; max-width:320px;">
+    <button id="btnResumeFS" style="font:inherit; font-size:20px; font-weight:700; padding:18px 36px; border-radius:999px; border:none; background:linear-gradient(90deg, #9fd3ff, #ff6b9d); color:#0a0e1a; cursor:pointer; box-shadow:0 6px 25px rgba(159,211,255,0.45); transition:transform 0.15s; width:100%;">▶ Resume Play</button>
+    <button id="btnStartFresh" style="font:inherit; font-size:16px; font-weight:600; padding:14px 28px; border-radius:999px; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06); color:#c4d3ec; cursor:pointer; transition:background 0.15s, transform 0.1s; width:100%;">↺ Start New Session</button>
+  </div>
+  <small style="color:#7a90b8; font-size:14px; margin-top:4px;">Parents: hold the top-left corner for 2 seconds for settings.</small>
 </div>
 
 
@@ -278,7 +281,7 @@
 <script>
 "use strict";
 /* ====== config: set after deploying the worker, e.g. "wss://tinytaps-presence.YOURNAME.workers.dev/ws" ====== */
-const PRESENCE_URL = "wss://tinytaps-presence.ritzy-windshield.workers.dev/ws";
+const PRESENCE_URL = "wss://tinytaps-presence.midi-accelerator.workers.dev/ws";
 
 /* ================= basics ================= */
 const canvas = document.getElementById('stage');
@@ -715,6 +718,27 @@ document.getElementById('btnResumeFS').onclick=()=>{
   document.getElementById('resumeScreen').style.display='none';
   requestFS();
 };
+
+/* ================= start new session ================= */
+function startNewSession(){
+  // Guardrail: warn if there's meaningful progress to lose
+  if(sessionSmashes > 5){
+    if(!confirm('Start a new session? Your current smashes ('+sessionSmashes+') will be cleared.')) return;
+  }
+  // Tear down any active overlays
+  document.getElementById('resumeScreen').style.display='none';
+  reportEl.style.display='none'; reportShown=false;
+  document.getElementById('toastNotice').style.display='none';
+  // Reset session state
+  sessionSmashes=0; sessionStart=Date.now();
+  isSleeping=false; startGone=true;
+  liveCounterEl.textContent='\u270B 0'; liveCounterEl.style.display='block';
+  // Fresh-start feedback
+  speak(childName ? 'New game, '+childName+'! Let\'s go!' : 'New game! Let\'s go!');
+  audio(); note(523.25,0.6);
+  requestFS();
+}
+document.getElementById('btnStartFresh').onclick=startNewSession;
 
 /* ================= smash report ================= */
 function chaosLevel(score){

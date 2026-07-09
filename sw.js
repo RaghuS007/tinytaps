@@ -1,4 +1,4 @@
-const CACHE = 'tinytaps-v10';
+const CACHE = 'tinytaps-v11';
 const isLocal = location.hostname === 'localhost' || 
                 location.hostname === '127.0.0.1' || 
                 location.hostname.startsWith('192.168.') || 
